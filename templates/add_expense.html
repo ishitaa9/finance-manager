@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: linear-gradient(135deg, #6f84c3, #5d93e1);
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+
+        h1 {
+            margin-left: 35px;
+            text-align: center;
+            color: #fff;
+            font-size: 3rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            animation: slideIn 1s ease-out;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background-color: #ff7e5f;
+            }
+            100% {
+                background-color: #feb47b;
+            }
+        }
+
+        form {
+            max-width: 500px;
+            width: 100%;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 7px;
+            margin-bottom: 0px;
+            display: block;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #ff7e5f;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #adabf5;
+            color: #fff;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease, box-shadow 0.2s ease;
+            margin-top: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        button:hover {
+            background-color: #feb47b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        button + button {
+            margin-top: 10px;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div>
+        <h1>✨ Add Expense ✨</h1>
+        <form method="POST">
+            <label for="name">Expense Name:</label>
+            <input type="text" id="name" name="name" required placeholder="Enter expense name"><br>
+
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" step="0.01" required placeholder="Enter amount"><br>
+
+            <label for="category">Category:</label>
+            <select id="category" name="category" required>
+                <option value="🍔 Food">Food</option>
+                <option value="🏡 Home">Home</option>
+                <option value="💼 Work">Work</option>
+                <option value="🎊 Fun">Fun</option>
+                <option value="✨ Misc">Misc</option>
+            </select><br>
+
+            <button type="submit">Add Expense</button>
+            <button onclick="window.location.href='/summary';">Go to Summary</button>
+        </form>
+    </div>
+</body>
+</html>

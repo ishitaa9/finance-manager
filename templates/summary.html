@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Summary</title>
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            color: #fff;
+            background-image: linear-gradient(135deg, #6f84c3, #5d93e1);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        h2, h3 {
+            color: #5d93e1;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #5d93e1;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Zebra Striping & Hover Effects */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f5ff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Summary Text */
+        p {
+            font-size: 1.1rem;
+            margin: 10px 0;
+        }
+
+        /* Budget Highlights */
+        p:nth-of-type(1) {
+            color: #ff6b6b;
+        }
+
+        p:nth-of-type(2) {
+            color: #28a745;
+        }
+
+        p:nth-of-type(3) {
+            color: #ffa502;
+        }
+
+        /* Button Styling */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin-top: 20px;
+            background-color: #adabf5;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: #4b7ac7;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            table, th, td {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💸 Expense Summary</h1>
+
+    <h2>Expenses By Category 📊</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total Amount Spent (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category, amount in amount_by_category.items() %}
+                <tr>
+                    <td>{{ category }}</td>
+                    <td>€{{ amount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Detailed Expenses 📋</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Expense Name</th>
+                <th>Category</th>
+                <th>Amount (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.category }}</td>
+                    <td>€{{ expense.amount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>💸 <strong>Total Spent:</strong> €{{ total_spent }}</p>
+    <p>✅ <strong>Budget Remaining:</strong> €{{ remaining_budget }}</p>
+    <p>📅 <strong>Budget Per Day:</strong> €{{ daily_budget }}</p>
+
+    <a href="{{ url_for('add_expense') }}">
+        <button class="btn">➕ Add Another Expense</button>
+    </a>
+
+</body>
+</html>
