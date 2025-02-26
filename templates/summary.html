@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Summary</title>
     <style>
-        /* General Page Styling */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f6f9;
@@ -13,8 +12,6 @@
             padding: 20px;
             color: #333;
         }
-
-        /* Header */
         h1 {
             text-align: center;
             color: #fff;
@@ -28,10 +25,18 @@
         h2, h3 {
             color: #5d93e1;
         }
-
-        /* Table Styling */
+        h2{
+            margin-bottom: 0;
+        }
+        .summary-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
         table {
-            width: 100%;
+            width: 60%;
+            box-sizing: border-box;
             border-collapse: collapse;
             margin-bottom: 30px;
             border-radius: 8px;
@@ -52,7 +57,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* Zebra Striping & Hover Effects */
         tbody tr:nth-child(even) {
             background-color: #f9f9f9;
         }
@@ -62,14 +66,10 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-
-        /* Summary Text */
         p {
             font-size: 1.1rem;
             margin: 10px 0;
         }
-
-        /* Budget Highlights */
         p:nth-of-type(1) {
             color: #ff6b6b;
         }
@@ -82,7 +82,6 @@
             color: #ffa502;
         }
 
-        /* Button Styling */
         .btn {
             display: inline-block;
             padding: 12px 24px;
@@ -109,7 +108,32 @@
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
         }
 
-        @media (max-width: 768px) {
+        #chart-container {
+            width: 30%;
+            max-width: 300px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            margin-left: 90px;
+        }
+
+        @media (max-width: 1090px) {
+            h2{
+                margin-bottom: 15px;
+            }
+            .summary-container {
+                flex-direction: column;  
+                align-items: flex-start;
+                gap: 20px;
+            }
+
+            table {
+                width: 90%; 
+            }
+
+            #chart-container {
+                margin-left: 30px;
+                width: 90%;
+            }
             table, th, td {
                 font-size: 0.9rem;
             }
@@ -120,29 +144,38 @@
             }
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
     <h1>💸 Expense Summary</h1>
 
+    <!-- Expenses by Category -->
     <h2>Expenses By Category 📊</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Total Amount Spent (€)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for category, amount in amount_by_category.items() %}
+    <div class="summary-container">
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ category }}</td>
-                    <td>€{{ amount }}</td>
+                    <th>Category</th>
+                    <th>Total Amount Spent (€)</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for category, amount in amount_by_category.items() %}
+                    <tr>
+                        <td>{{ category }}</td>
+                        <td>€{{ amount }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            <div id="chart-container">
+            <canvas id="expenseChart"></canvas>
+        </div>
+    </div>
+    
 
+    <!-- Detailed Expenses -->
     <h3>Detailed Expenses 📋</h3>
     <table>
         <thead>
@@ -170,6 +203,42 @@
     <a href="{{ url_for('add_expense') }}">
         <button class="btn">➕ Add Another Expense</button>
     </a>
+
+    <script>
+        const chartCategories = {{ amount_by_category.keys() | list | tojson }};
+        const chartAmounts = {{ amount_by_category.values() | list | tojson }};
+
+        // Colors for the Pie Chart
+        const chartColors = ['#FF6384', '#36A2EB', '#FFCE56', '#8BC34A', '#FF9800', '#9C27B0'];
+
+        // Create Pie Chart
+        const ctx = document.getElementById('expenseChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: chartCategories,
+                datasets: [{
+                    label: 'Expenses by Category',
+                    data: chartAmounts,
+                    backgroundColor: chartColors,
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: '💸 Expenses by Category'
+                    }
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
