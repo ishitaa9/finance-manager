@@ -54,62 +54,24 @@ def add_expense():
 @app.route('/summary')
 def summary():
     budget = get_budget()  # Fetch updated budget
-    expense_file_path = "expenses.csv"
-    expenses = read_expenses_from_file(expense_file_path)
-    # Read expenses from the CSV file
-    expenses = []
-    with open(expense_file_path, "r") as f:
-        lines = f.readlines()
-        
-        # Skip the header row (first line)
-        header = lines[0].strip().split(", ")
-        
-        # Process the remaining lines
-        for line in lines[1:]:
-            stripped_line = line.strip()  # Remove extra whitespace
-            
-            # Skip empty lines
-            if not stripped_line:
-                continue
-
-            # Split the line into expense_name, expense_amount, and expense_category
-            parts = stripped_line.split(", ")
-            
-            # Skip lines that don't have exactly 3 values
-            if len(parts) != 3:
-                print(f"Skipping invalid row: {line.strip()}")
-                continue
-            
-            expense_name, expense_amount, expense_category = parts
-            
-            try:
-                expense = {
-                    'name': expense_name,
-                    'amount': float(expense_amount),  # Ensure it's a float
-                    'category': expense_category
-                }
-                expenses.append(expense)
-            except ValueError:
-                # Handle any invalid rows (like malformed data that can't be converted to float)
-                print(f"Skipping invalid row (non-numeric value): {line.strip()}")
+    expenses = read_expenses_from_file('expenses.csv')
     
     # Calculate total amount by category
-    amount_by_category = {}
-    for expense in expenses:
-        category = expense['category']
-        if category in amount_by_category:
-            amount_by_category[category] += expense['amount']
-        else:
-            amount_by_category[category] = expense['amount']
-    
-    # Total amount spent and budget remaining
-    total_spent = sum(expense['amount'] for expense in expenses)
-    remaining_budget = budget - total_spent
-    days_left = 10  # Assuming 10 days left in the month
-    daily_budget = remaining_budget / days_left if days_left > 0 else 0
-
     amount_by_category = summarize_expenses_by_category(expenses)
 
+    # Calculate total amount spent, remaining budget, and daily budget
+    total_spent = sum(expense.amount for expense in expenses)  # Use dot notation
+    remaining_budget = budget - total_spent
+    days_left = 10  # Example: assuming 10 days left
+    daily_budget = remaining_budget / days_left if days_left > 0 else 0
+    
+    # Debugging print statements to check values
+    print(f"Total Spent: {total_spent}")
+    print(f"Remaining Budget: {remaining_budget}")
+    print(f"Daily Budget: {daily_budget}")
+    print(f"Amount by Category: {amount_by_category}")
+    
+    # Pass values to the template
     return render_template('summary.html',
                            amount_by_category=amount_by_category,
                            total_spent=total_spent,
@@ -163,8 +125,9 @@ def read_expenses_from_file(expense_file_path):
 def summarize_expenses_by_category(expenses):
     amount_by_category = {}
     for expense in expenses:
-        category = expense['category'] if isinstance(expense, dict) else expense.category
-        amount = expense['amount'] if isinstance(expense, dict) else expense.amount
+        # Use dot notation to access the attributes
+        category = expense.category
+        amount = expense.amount
 
         if category in amount_by_category:
             amount_by_category[category] += amount
